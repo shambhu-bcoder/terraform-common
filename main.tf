@@ -67,9 +67,6 @@ resource "aws_eip" "web_server_ip" {
   depends_on = [aws_security_group.sg_ec2]
 }
 
-
-
-
 resource "aws_eip_association" "web_server_association" {
   allocation_id = aws_eip.web_server_ip.id
   instance_id   = aws_instance.web_server.id
