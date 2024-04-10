@@ -1,0 +1,73 @@
+---
+- hosts: ec2_instances
+  become: true
+  tasks:
+    - name: Install gnupg and curl for key management
+      apt:
+        name:
+          - gnupg
+          - curl
+        state: present
+
+    - name: Import MongoDB repository key
+      command: curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+      args:
+       creates: /usr/share/keyrings/mongodb-server-7.0.gpg  # Skip if key already exists
+
+    - name: Add MongoDB repository list
+      copy:
+        content: |
+          deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse
+        dest: /etc/apt/sources.list.d/mongodb-org-7.0.list
+
+    - name: Update package lists
+      apt:
+        update_cache: yes
+
+    - name: Install MongoDB package
+      apt:
+        name: mongodb-org
+        state: present
+
+    - name: Start and enable MongoDB service
+      service:
+        name: mongod
+        state: started
+        enabled: yes
+
+    - name: Enable MongoDB authentication
+      lineinfile:
+        path: /etc/mongod.conf
+        regexp: '^security:'
+        line: 'security:'
+        insertafter: '#security:'
+
+    - name: Set authorization enabled
+      lineinfile:
+        path: /etc/mongod.conf
+        line: 'authorization: enabled'
+        insertafter: '^#security:'
+
+    - name: Set bindIp to 0.0.0.0
+      lineinfile:
+        path: /etc/mongod.conf
+        line: '  bindIp: 0.0.0.0'
+        insertafter: '^#  network interfaces'
+
+    - name: Restart MongoDB
+      service:
+        name: mongod
+        state: restarted
+
+    - name: Create admin user (initial setup)
+      mongodb_user:
+        login_user: mytuur  # Use the built-in admin user for initial setup
+        login_password: mytuurAdmin123  # Provide the password as a variable
+        name: mytuur
+        password: mytuurAdmin123  # Provide the password as a variable
+        roles:
+          - userAdminAnyDatabase
+          - dbAdminAnyDatabase
+          - readWriteAnyDatabase
+        database: admin
+
