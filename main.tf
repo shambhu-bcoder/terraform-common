@@ -1,6 +1,6 @@
 provider "aws" {
   region = "eu-north-1"
- 
+
   # Use environment variables or a secure secrets management system for access keys
 }
 

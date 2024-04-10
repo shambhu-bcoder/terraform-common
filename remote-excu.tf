@@ -34,11 +34,12 @@ provisioner "remote-exec" {
     "sudo systemctl enable nginx",
     "sudo mv /home/ubuntu/default.conf /etc/nginx/sites-enabled/mytuur",
     "sudo systemctl reload nginx",
+     "sudo docker network create mytuur",
      "sudo docker pull mongo",
-     "sudo docker run -d --name mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=${var.mongodb_username} -e MONGO_INITDB_ROOT_PASSWORD=${var.mongodb_password} -it mongo:latest",
-     "sudo docker pull shambhubcoder44/mytuur:v1.0",
+     "sudo docker run -d --name mongo -p 27017:27017 --network mytuur -e MONGO_INITDB_ROOT_USERNAME=${var.mongodb_username} -e MONGO_INITDB_ROOT_PASSWORD=${var.mongodb_password} -it mongo:latest",
+     "sudo docker pull shambhubcoder44/mytuur:latest",
     //3023 port also added in nginx script i.e mytuur.conf
-    "sudo docker run -d --name mytuur -p 3023:3023 shambhubcoder44/mytuur:v1.0",
+    "sudo docker run -d --name mytuur -p 3023:3023 --network mytuur shambhubcoder44/mytuur:latest ",
   ]
 }
 

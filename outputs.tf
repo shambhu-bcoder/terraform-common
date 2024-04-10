@@ -3,12 +3,12 @@ output "private_key_file" {
   description = "pem file"
 }
 
-output "aws_instance" {
+output "public_dns" {
   value = aws_instance.web_server.public_dns
   description = "public dns"
 }
 
-output "aws_instance" {
+output "public_ip" {
   value = aws_instance.web_server.public_ip
   description = "public ip"
 }
