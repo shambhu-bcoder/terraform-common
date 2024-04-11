@@ -71,3 +71,6 @@
           - readWriteAnyDatabase
         database: admin
 
+
+
+#  ssh -i "mytuur-prod.pem" ubuntu@ec2-13-48-116-175.eu-north-1.compute.amazonaws.com
