@@ -39,7 +39,7 @@ provisioner "remote-exec" {
      "sudo docker run -d --name mongo -p 27017:27017 --network mytuur -v /data:/data/db -e MONGO_INITDB_ROOT_USERNAME=${var.mongodb_username} -e MONGO_INITDB_ROOT_PASSWORD=${var.mongodb_password} -it mongo:latest",
      "sudo docker pull shambhubcoder44/mytuur:latest",
     //3023 port also added in nginx script i.e mytuur.conf
-    "sudo docker run -d --name mytuur -p 3023:3023   --network mytuur shambhubcoder44/mytuur:latest ",
+    "sudo docker run -d --name mytuur -p 3023:3023   --network mytuur shambhubcoder44/mytuur:latest",
   ]
 }
 
